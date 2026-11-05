@@ -91,25 +91,6 @@ Lưu ý: API nằm dưới `/api/v1` (ví dụ `http://localhost:8080/api/v1/pro
 
 ---
 
-## Kịch bản demo gợi ý (~10 phút)
-
-| # | Thao tác | Chứng minh | Truy vết tiểu luận |
-|---|---|---|---|
-| 1 | Trang chủ: lọc **Size M + màu Đen + giá 200.000–500.000**, sắp xếp giá tăng | Lọc kết hợp, chỉ hiện sản phẩm còn hàng | UC03, UC06, FR10, FR11 |
-| 2 | Tìm "hoodie" trên thanh tìm kiếm | Tìm theo từ khóa | UC05, FR08 |
-| 3 | Mở **Hoodie Basic Nỉ Bông**, nhập 170 cm / 62 kg / Vừa → **Gợi ý** | Gợi ý size; AI Service không chạy nên tự dùng bảng size và lùi 1 size vì phom oversize | UC20, FB-01, AX-02 |
-| 4 | Bấm Thêm vào giỏ khi chưa đăng nhập | Chuyển sang đăng nhập | BR03 |
-| 5 | Đăng nhập sai mật khẩu 5 lần (tài khoản tự tạo ở bước Đăng ký) | Khóa 15 phút | UC02, BR16 |
-| 6 | Đăng nhập `khach@avq.vn`, chọn **XL / Đen** (còn 1), đặt số lượng 2 | Báo "Chỉ còn 1 sản phẩm…" | UC07, BR05, EX-02 |
-| 7 | Thêm hoodie L/Đen + áo thun M/Trắng, vào giỏ | Giỏ hàng, sửa số lượng, tạm tính | UC08 |
-| 8 | Thanh toán **COD** (tạm tính ≥ 500.000 đ) | Miễn phí giao, đơn **Chờ xác nhận**, tồn kho giảm | UC09, BR09, BR10, BR11 |
-| 9 | Đặt đơn thứ hai < 500.000 đ, chọn **trực tuyến** → cổng giả lập → **Thất bại**, rồi **Thanh toán lại** → **Thành công** | Phí 30.000 đ; đơn giữ Chờ thanh toán khi thất bại; IPN ký HMAC chuyển đơn sang Chờ xác nhận | UC10, DT-05, EX-03 |
-| 10 | Đơn của tôi → mở một đơn **Chờ xác nhận** → **Hủy đơn** | Hủy, hoàn tồn kho, lịch sử trạng thái | UC11, UC12, BR11, BR13 |
-| 11 | `/admin` đăng nhập `nhanvien1` → Đơn hàng → chọn đơn → **Đang giao** + mã vận đơn → **Đã giao** | Chỉ hiện trạng thái kế tiếp hợp lệ; khách xem thấy lịch sử | UC18, UC19, DT-04, BR14 |
-| 12 | Thử **Đã hủy** không ghi lý do | Báo bắt buộc lý do | UC19 2a |
-| 13 | Sản phẩm → sửa tồn kho một biến thể, sửa giá, ẩn/hiện, thêm sản phẩm mới | Quản lý sản phẩm, nhật ký thay đổi | UC14–UC17, BR06, BR17 |
-
-Mẹo: muốn demo lại từ đầu, xóa dữ liệu (`docker compose down -v`, hoặc `DROP DATABASE avq_db;` với cách 2) rồi chạy lại.
 
 ## Thanh toán VNPay thật (tùy chọn)
 
