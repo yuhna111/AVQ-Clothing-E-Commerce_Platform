@@ -105,5 +105,6 @@ Mặc định `payment.provider=mock` dùng cổng giả lập (cùng thuật to
 | `Access denied for user 'root'` | Đặt đúng `DB_PASSWORD` (cách 2) |
 | `Public Key Retrieval is not allowed` | URL mặc định đã có `allowPublicKeyRetrieval=true`; nếu tự đặt `DB_URL` hãy thêm tham số này |
 | Flyway báo `Validate failed` / `checksum mismatch` | CSDL còn từ lần chạy cũ với script khác: xóa CSDL `avq_db` rồi chạy lại |
+| Ảnh sản phẩm tải lên không hiển thị (ảnh mẫu `.svg` vẫn hiện) | Đang mở một bản `npm run dev` cũ hoặc chạy ở cổng khác 5173. Tắt mọi cửa sổ `npm run dev`, chạy lại một bản duy nhất, mở đúng **http://localhost:5173** và bấm Ctrl+F5 |
 | Giao diện báo lỗi mạng khi gọi API | Backend chưa khởi động xong, hoặc chạy frontend bằng cách khác `npm run dev` (cần proxy `/api`) |
 | Maven tải thư viện rất lâu lần đầu | Bình thường (~200 MB); lần sau dùng bộ nhớ đệm |

@@ -34,8 +34,10 @@ h1 { font-size:24px; margin:0 0 16px; } h2 { font-size:18px; margin:0 0 12px; }
 .btn.light { background:#fff; color:var(--ink); border:1px solid #bbb; } .btn.red { background: var(--accent); }
 .btn:disabled { opacity:.45; cursor:not-allowed; }
 .detail { display:grid; grid-template-columns: 1fr 1fr; gap:32px; }
-.detail .gallery img { width:100%; border-radius:10px; border:1px solid var(--line); background:#f3f1ec; }
-.thumbs { display:flex; gap:8px; margin-top:8px; } .thumbs img { width:72px; cursor:pointer; border-radius:6px; }
+.detail .gallery > img { width:100%; aspect-ratio: 240/260; object-fit:contain; border-radius:10px; border:1px solid var(--line); background:#f3f1ec; }
+.thumbs { display:flex; gap:8px; margin-top:8px; } .thumbs img { width:72px; height:78px; object-fit:cover; cursor:pointer; border-radius:6px; border:1px solid var(--line); background:#f3f1ec; }
+/* ảnh nhỏ trong bảng (giỏ hàng, đơn hàng, quản trị): khung cố định, ảnh dọc/ngang tự cắt vừa */
+.thumb-sm { object-fit:cover; border-radius:6px; background:#f3f1ec; flex-shrink:0; }
 .advisor { background:#eaf7fd; border:1px solid #9fd3ec; border-radius:8px; padding:12px; margin:14px 0; }
 .advisor .row { display:flex; gap:8px; align-items:end; } .advisor input, .advisor select { padding:6px 8px; border:1px solid #bbb; border-radius:5px; width:90px; }
 table { width:100%; border-collapse: collapse; background:#fff; } th, td { padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px; vertical-align: middle; }
@@ -55,3 +57,8 @@ th { background:#f6f5f2; font-size:13px; }
 .inline { display:flex; gap:8px; align-items:center; }
 .err-text { color: var(--accent); font-size: 13px; }
 @media (max-width: 800px) { .layout, .detail, .two { grid-template-columns: 1fr; } .search { display:none; } }
+.dropzone { position:relative; border:2px dashed #bbb; border-radius:10px; background:#fff; min-height:150px; display:flex; align-items:center; justify-content:center; text-align:center; padding:12px; cursor:pointer; transition: border-color .15s, background .15s; }
+.dropzone:hover, .dropzone:focus-visible, .dropzone.drag { border-color: var(--blue); background:#eaf7fd; outline:none; }
+.dropzone.has-img { padding:6px; border-style:solid; }
+.dropzone img { max-width:100%; max-height:220px; border-radius:6px; object-fit:contain; }
+.dropzone-busy { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#fffc; border-radius:8px; font-weight:600; }

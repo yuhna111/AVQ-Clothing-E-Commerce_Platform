@@ -12,6 +12,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     @Query("UPDATE ProductVariant v SET v.stockQty = v.stockQty - :qty, v.version = v.version + 1 WHERE v.id = :id AND v.stockQty >= :qty")
     int decreaseStock(@Param("id") Long id, @Param("qty") int qty);
 
+    boolean existsBySku(String sku);
+
     @Modifying
     @Query("UPDATE ProductVariant v SET v.stockQty = v.stockQty + :qty, v.version = v.version + 1 WHERE v.id = :id")
     int increaseStock(@Param("id") Long id, @Param("qty") int qty);

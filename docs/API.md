@@ -84,6 +84,7 @@ thành công (`vnp_ResponseCode = 00`) → payment THANH_CONG, đơn CHO_THANH_T
 | GET | /admin/orders?status= | – | danh sách như GET /orders (status rỗng = tất cả) |
 | GET | /admin/orders/{code} | – | `OrderDetailDto` |
 | PATCH | /admin/orders/{code}/status | `{status, note}` (DANG_GIAO: note = mã vận đơn → tracking_code; đơn CHO_THANH_TOAN → INVALID_TRANSITION) | `OrderDetailDto` |
+| POST | /admin/uploads/images | `multipart/form-data`, trường `file` (JPG/PNG/WEBP/GIF, ≤ 5 MB, kiểm tra chữ ký file; SVG/HTML → VALIDATION_ERROR) | `{url: "/uploads/<tên>.<đuôi>"}` — dùng làm `imageUrl` khi POST /admin/products; ảnh phục vụ công khai tại `/uploads/**` |
 | GET | /admin/products | – | `[ProductDetailDto]` gồm cả sản phẩm ẩn |
 | POST | /admin/products | `{categoryId, name, description, material, fitType, price, imageUrl, variants:[{size, color, sku, stock}]}` (≥ 1 biến thể) | `ProductDetailDto` |
 | PUT | /admin/products/{id} | `{price?, description?, material?, visible?}` (price > 0) | `ProductDetailDto` |

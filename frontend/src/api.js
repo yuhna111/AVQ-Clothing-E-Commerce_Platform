@@ -17,8 +17,26 @@ export async function api(path, { method = "GET", body, params } = {}) {
     headers: { "Content-Type": "application/json", ...(s ? { Authorization: "Bearer " + s.token } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
+  return readResponse(res);
+}
+
+// UC15: nhân viên tải ảnh sản phẩm từ thiết bị (multipart) → { url: "/uploads/..." }
+export async function uploadImage(file) {
+  const s = getSession();
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/v1/admin/uploads/images", {
+    method: "POST",
+    headers: s ? { Authorization: "Bearer " + s.token } : {},
+    body: form,
+  });
+  return readResponse(res);
+}
+
+async function readResponse(res) {
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch { data = null; }
   if (!res.ok) {
     const err = new Error((data && data.message) || "Có lỗi xảy ra (" + res.status + ")");
     err.code = data && data.code; err.status = res.status;

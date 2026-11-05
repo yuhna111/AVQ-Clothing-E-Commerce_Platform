@@ -12,6 +12,10 @@ spring:
     locations: classpath:db/migration,classpath:db/demo   # db/demo = V3 dữ liệu mẫu cho buổi demo
   jackson:
     time-zone: Asia/Ho_Chi_Minh
+  servlet.multipart:
+    max-file-size: 6MB                  # ImageStorage tự giới hạn 5 MB và báo lỗi tiếng Việt
+    max-request-size: 6MB
+upload.dir: ${UPLOAD_DIR:uploads}       # thư mục lưu ảnh nhân viên tải lên, phục vụ tại /uploads/**
 server.port: 8080
 jwt.secret: ${JWT_SECRET:avq-clothing-demo-secret-key-2026!!}
 ai.base-url: ${AI_BASE_URL:http://localhost:8000}      # không có AI Service -> tự dùng bảng size (FB-01)

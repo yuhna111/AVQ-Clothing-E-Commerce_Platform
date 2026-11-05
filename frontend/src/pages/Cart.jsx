@@ -25,7 +25,7 @@ export default function Cart() {
           <tbody>
             {cart.items.map((i) => (
               <tr key={i.variantId}>
-                <td><img src={i.image} width="56" style={{ borderRadius: 6 }} /></td>
+                <td><img className="thumb-sm" src={i.image} width="56" height="60" alt="" /></td>
                 <td><Link to={"/san-pham/" + i.productId}><b>{i.productName}</b></Link><div className="muted">{i.size} / {i.color} · còn {i.stock}</div></td>
                 <td>{money(i.unitPrice)}</td>
                 <td>

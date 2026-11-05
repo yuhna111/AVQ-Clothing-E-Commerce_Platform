@@ -14,9 +14,11 @@ public class ProductService {
     private final ProductRepository productRepo;
     private final CategoryRepository categoryRepo;
     private final SizeChartRepository chartRepo;
+    private final ProductVariantRepository variantRepo;
 
-    public ProductService(ProductRepository productRepo, CategoryRepository categoryRepo, SizeChartRepository chartRepo) {
-        this.productRepo = productRepo; this.categoryRepo = categoryRepo; this.chartRepo = chartRepo;
+    public ProductService(ProductRepository productRepo, CategoryRepository categoryRepo, SizeChartRepository chartRepo,
+                          ProductVariantRepository variantRepo) {
+        this.productRepo = productRepo; this.categoryRepo = categoryRepo; this.chartRepo = chartRepo; this.variantRepo = variantRepo;
     }
 
     @Transactional(readOnly = true)
@@ -54,14 +56,39 @@ public class ProductService {
     /** UC15: thêm sản phẩm kèm ít nhất một biến thể (BR17). */
     @Transactional
     public Long create(CreateProductRequest r) {
-        if (r.variants() == null || r.variants().isEmpty())
-            throw new BusinessException("VALIDATION_ERROR", "Sản phẩm phải có ít nhất một biến thể (size, màu)");
+        validateNew(r);
+        for (CreateProductRequest.NewVariant v : r.variants())
+            if (variantRepo.existsBySku(v.sku().trim()))
+                throw new BusinessException("DUPLICATE", "Mã SKU \"" + v.sku().trim() + "\" đã được dùng cho sản phẩm khác");
         Category c = categoryRepo.findById(r.categoryId()).orElseThrow(() -> new BusinessException("NOT_FOUND", "Danh mục không tồn tại"));
         Product p = new Product(c, r.name(), r.price(), r.fitType() == null ? FitType.REGULAR : FitType.valueOf(r.fitType()));
         p.updateInfo(r.price(), r.description(), r.material());
-        for (CreateProductRequest.NewVariant v : r.variants()) p.addVariant(v.size(), v.color(), v.sku(), v.stock());
+        for (CreateProductRequest.NewVariant v : r.variants()) p.addVariant(v.size().trim(), v.color().trim(), v.sku().trim(), v.stock());
         if (!blank(r.imageUrl())) p.addImage(r.imageUrl(), true);
         return productRepo.save(p).getId();
+    }
+
+    /** Kiểm tra dữ liệu UC15 trước khi ghi CSDL, báo lỗi rõ ràng thay vì để MySQL từ chối (sku UNIQUE, uq_variant). */
+    static void validateNew(CreateProductRequest r) {
+        if (r.categoryId() == null) throw new BusinessException("VALIDATION_ERROR", "Vui lòng chọn danh mục");
+        if (blank(r.name())) throw new BusinessException("VALIDATION_ERROR", "Vui lòng nhập tên sản phẩm");
+        if (r.price() == null || r.price().signum() <= 0) throw new BusinessException("VALIDATION_ERROR", "Giá phải lớn hơn 0");
+        if (r.variants() == null || r.variants().isEmpty())
+            throw new BusinessException("VALIDATION_ERROR", "Sản phẩm phải có ít nhất một biến thể (size, màu)");
+        Set<String> skus = new HashSet<>(), sizeColors = new HashSet<>();
+        int i = 0;
+        for (CreateProductRequest.NewVariant v : r.variants()) {
+            String row = "Biến thể " + (++i) + ": ";
+            if (blank(v.size()) || blank(v.color())) throw new BusinessException("VALIDATION_ERROR", row + "phải nhập size và màu");
+            if (blank(v.sku())) throw new BusinessException("VALIDATION_ERROR", row + "phải nhập mã SKU");
+            if (v.size().trim().length() > 5 || v.color().trim().length() > 30 || v.sku().trim().length() > 40)
+                throw new BusinessException("VALIDATION_ERROR", row + "size tối đa 5, màu tối đa 30, SKU tối đa 40 ký tự");
+            if (v.stock() < 0) throw new BusinessException("VALIDATION_ERROR", row + "tồn kho không được âm");
+            if (!skus.add(v.sku().trim().toLowerCase()))
+                throw new BusinessException("DUPLICATE", row + "mã SKU \"" + v.sku().trim() + "\" bị trùng với biến thể khác");
+            if (!sizeColors.add(v.size().trim().toLowerCase() + "|" + v.color().trim().toLowerCase()))
+                throw new BusinessException("DUPLICATE", row + "đã có biến thể size " + v.size().trim() + " màu " + v.color().trim());
+        }
     }
 
     /** UC16: sửa giá, mô tả, ẩn/hiện. */

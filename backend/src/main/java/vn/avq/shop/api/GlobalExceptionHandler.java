@@ -21,6 +21,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(STATUS.getOrDefault(e.getCode(), 400)).body(new ErrorResponse(e.getCode(), e.getMessage()));
     }
 
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handle(org.springframework.web.multipart.MaxUploadSizeExceededException e) {
+        return ResponseEntity.status(400).body(new ErrorResponse("VALIDATION_ERROR", "Ảnh vượt quá 5 MB"));
+    }
+
+    /** Lưới an toàn: vi phạm ràng buộc UNIQUE/khóa ngoại mà tầng service chưa bắt được. */
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handle(org.springframework.dao.DataIntegrityViolationException e) {
+        return ResponseEntity.status(409).body(new ErrorResponse("DUPLICATE", "Dữ liệu bị trùng hoặc không hợp lệ (ví dụ mã SKU đã tồn tại)"));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handle(IllegalArgumentException e) {
         return ResponseEntity.status(400).body(new ErrorResponse("VALIDATION_ERROR", e.getMessage()));
