@@ -1,0 +1,11 @@
+package vn.avq.shop.repository;
+
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
+import vn.avq.shop.domain.*;
+import java.time.LocalDateTime;
+import java.util.*;
+
+public interface CartRepository extends JpaRepository<Cart, Long> {
+    Optional<Cart> findByCustomerId(Long customerId);
+}

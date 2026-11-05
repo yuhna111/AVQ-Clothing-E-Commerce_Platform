@@ -1,0 +1,28 @@
+# Chạy toàn bộ hệ thống: docker compose up --build   rồi mở http://localhost:5173
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: avq_db
+      MYSQL_ROOT_PASSWORD: avq123
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports: ["3307:3306"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pavq123"]
+      interval: 5s
+      retries: 30
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:mysql://db:3306/avq_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USER: root
+      DB_PASSWORD: avq123
+      PAYMENT_PROVIDER: mock
+    depends_on:
+      db:
+        condition: service_healthy
+    ports: ["8080:8080"]
+  frontend:
+    build: ./frontend
+    depends_on: [backend]
+    ports: ["5173:80"]
